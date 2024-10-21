@@ -11,10 +11,20 @@ export default defineEventHandler(async (event) => {
     return { error: 'Search term is required.' };
   }
 
+  const searchString = String(search);
+
   try {
-    const result = await prisma.$queryRawUnsafe(
-      `SELECT * FROM GuestbookEntry WHERE comment LIKE '%${search}%'`
-    );
+    // const result = await prisma.$queryRawUnsafe(
+    //   `SELECT * FROM GuestbookEntry WHERE comment LIKE '%${search}%'`
+    // );
+    
+    const result = await prisma.guestbookEntry.findMany({
+      where: {
+        comment: {
+          contains: searchString,
+        },
+      },
+    })
 
     return result;
   } catch (e) {

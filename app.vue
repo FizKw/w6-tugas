@@ -37,10 +37,10 @@
       <section v-if="comments.length">
         <article v-for="comment in comments" :key="comment.id" class="comment">
           <header>
-            <h3>{{ comment.name }}</h3>
-            <small>{{ comment.email }}</small>
+            <h3>{{ sanitizeHtml(comment.name) }}</h3>
+            <small>{{ sanitizeHtml(comment.email) }}</small>
           </header>
-          <div v-html="comment.comment"></div>
+          <div> {{ sanitizeHtml(comment.comment) }}</div>
         </article>
       </section>
     </div>
