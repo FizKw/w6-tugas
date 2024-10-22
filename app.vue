@@ -49,6 +49,7 @@
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import DOMPurify from 'dompurify'
 
 const form = ref({
   name: '',
@@ -58,6 +59,10 @@ const form = ref({
 
 const comments = ref([])
 const searchQuery = ref('')
+
+const sanitizeHtml = (html) => {
+  return DOMPurify.sanitize(html)
+}
 
 const fetchComments = async () => {
   try {
@@ -114,9 +119,12 @@ const downloadFile = async () => {
     const link = document.createElement('a');
     link.href = url;
     link.download = filename;
+    document.body.appendChild(link);
     link.click();
+    document.body.removeChild(link);
   } catch (error) {
     console.error('Failed to download the file:', error);
+    alert("Failed to download the file");
   }
 }
 
