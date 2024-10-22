@@ -14,10 +14,7 @@ export default defineEventHandler(async (event) => {
   const searchString = String(search);
 
   try {
-    // const result = await prisma.$queryRawUnsafe(
-    //   `SELECT * FROM GuestbookEntry WHERE comment LIKE '%${search}%'`
-    // );
-    
+
     const result = await prisma.guestbookEntry.findMany({
       where: {
         comment: {
