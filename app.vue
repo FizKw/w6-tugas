@@ -18,6 +18,8 @@
             <label for="comment">Comment:</label>
             <textarea id="comment" v-model="form.comment" required></textarea>
 
+            <input type="hidden" name="csrf_token" :value="csrfToken" />
+
             <button type="submit">Add Comment</button>
           </form>
         </section>
