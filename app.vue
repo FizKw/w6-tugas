@@ -29,6 +29,7 @@
             <label for="search">Keyword:</label>
             <input type="text" id="search" v-model="searchQuery" placeholder="Search for comments..." />
             <button type="submit">Search</button>
+            <input type="hidden" name="csrf_token" :value="csrfToken" />
             <button @click="fetchComments" type="button">Reset</button>
           </form>
         </section>
@@ -59,6 +60,7 @@ const form = ref({
 
 const comments = ref([])
 const searchQuery = ref('')
+const csrfToken = ref('')
 
 const sanitizeHtml = (html) => {
   return DOMPurify.sanitize(html)
@@ -75,11 +77,25 @@ const fetchComments = async () => {
   }
 }
 
+const fetchCsrfToken = async () => {
+  try {
+    const response = await $fetch('/api/csrf-token', {
+      method: 'GET'
+    })
+    csrfToken.value = response.csrfToken
+  } catch (error) {
+    console.error('Failed to fetch CSRF token:', error)
+  }
+}
+
 const addComment = async () => {
   try {
     await $fetch('/api/add-comment', {
       method: 'POST',
-      body: form.value
+      body: {
+        ...form.value,
+        _csrf: csrfToken.value
+      }
     })
 
     form.value = {
@@ -130,6 +146,7 @@ const downloadFile = async () => {
 
 onMounted(() => {
   fetchComments()
+  fetchCsrfToken()
 })
 </script>
 
